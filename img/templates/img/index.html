@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}img图床{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+
+            {% for i in imglist %}
+                <div class="col-md-4" id=imgcard{{ i.id }}>
+                    <div class="card" style="width: 18rem;margin-top: 20px;">
+                        <img src={{ i.url }}  width="100%" height="200"
+                             class="bd-placeholder-img card-img-top" alt="...">
+                        <div class="card-body">
+                            <div class="form-inline row">
+                                <label class="radio-inline" style="padding-left: 40px;">
+                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> url
+                                </label>
+
+                                <label class="radio-inline" style="padding-left: 20px;">
+                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                    md
+                                </label>
+
+                                <label class="radio-inline" style="padding-left: 20px; padding-right: 20px;">
+                                    <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+                                    html
+                                </label>
+
+                                <button type="button" class="btn btn-outline-success btn-sm " id=imgcard{{ i.id }} >复制
+                                </button>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block jscode %}
+    <script>
+        $(function () {
+            $(".btn.btn-outline-success.btn-sm ").click(function () {
+                // 获取图片链接
+                var id = $(this).attr("id");
+                src = $(`div[id=${id}] img`).attr("src");
+
+                // 根据图片链接和单选框选中值生成复制内容
+                var choose = $(`div[id=${id}] input[type='radio']:checked `).val()
+                var content = ""
+                if (choose == 'option1') content = src;
+                else if (choose == 'option2') content = `![](${src})`;
+                else if (choose == 'option3') content = `<img src="${src}">`;
+
+                // 复制到剪切板上
+                var inputElement = document.createElement("input");
+                document.body.appendChild(inputElement);
+                inputElement.setAttribute('value', content);
+                inputElement.select();
+                document.execCommand('copy');
+                document.body.removeChild(inputElement);
+
+            });
+
+            // 单击图片新建标签页查看
+            $("img[class='bd-placeholder-img card-img-top']").click(function () {
+                var src = $(this).attr("src");
+                window.open(src);
+            });
+        })
+
+    </script>
+
+{% endblock %}
